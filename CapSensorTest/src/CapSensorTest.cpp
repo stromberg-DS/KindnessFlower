@@ -26,6 +26,12 @@ int lastTouched = 0;
 int currTouched = 0;
 bool isLedOn[12];
 int ledPins[6] = {3,4,5,6,7,10};
+int NewBase;
+int NewBaseCounter = 0;
+int touch = 150;
+int release = 150;
+
+
 
 // setup() runs once, when the device is first turned on
 void setup() {
@@ -34,12 +40,20 @@ void setup() {
 
   for (int i=0; i<6; i++){
     pinMode(ledPins[i], OUTPUT);
+
   }
+  cap.setThreshholds(touch, release);
+  
 }
 
 // loop() runs over and over again, as quickly as it can execute.
 void loop() {
   currTouched = cap.touched();
+  if(NewBaseCounter < 10){
+    Serial.printf("Counter: %i\n\n", NewBaseCounter);
+    NewBase = cap.filteredData(2) - 10;
+    NewBaseCounter = NewBaseCounter + 1;
+  }
   // Serial.printf("currtouched: %i\n", currTouched);
 
   //Below does a bitwise and between the binary version of currTouched number
@@ -58,10 +72,10 @@ void loop() {
   //
   for (int i=0; i<12; i++){
     if((currTouched & _BV(i)) && !(lastTouched & _BV(i))){
-      Serial.printf("%i Touched\n", i);
-      Serial.printf("CurrTouched: %i\n", currTouched);
-      Serial.printf("_BV(i) = %i\n", _BV(i));
-      Serial.printf("(currTouched & _BV(i)) = %i\n\n", currTouched & _BV(i));
+      // Serial.printf("%i Touched\n", i);
+      // Serial.printf("CurrTouched: %i\n", currTouched);
+      // Serial.printf("_BV(i) = %i\n", _BV(i));
+      // Serial.printf("(currTouched & _BV(i)) = %i\n\n", currTouched & _BV(i));
     }
 
     if((currTouched & _BV(i) && (lastTouched & _BV(i)))){
@@ -70,11 +84,44 @@ void loop() {
     } else{
       isLedOn[i] = false;
     }
-  }
+  
 
-  for (int i=0; i<6; i++){
-    digitalWrite(ledPins[i], isLedOn[i]);
-  }
+  // for (int i=0; i<6; i++){
+  //   digitalWrite(ledPins[i], isLedOn[i]);
+  // }
 
   lastTouched = currTouched;
-}
+  if(NewBase - cap.filteredData(2) > 12){
+    for (int i=0; i<6; i++){
+      digitalWrite(ledPins[i], HIGH);
+    }
+    Serial.printf("Touched\n");
+  }else {
+    for (int j=0; j<6; j++){
+      digitalWrite(ledPins[i], LOW);
+    }
+  }
+
+
+Serial.printf("NewBase %i \n", NewBase);
+// Serial.printf("Filtered: %i \n", cap.filteredData(2));
+// Serial.printf("Difference: %i \n\n", (NewBase - cap.filteredData(2)));
+
+ // comment out this line for detailed data from the sensor!
+  //return;
+  
+  // debugging info, what
+  // Serial.print("\t\t\t\t\t\t\t\t\t\t\t\t\t 0x"); Serial.println(cap.touched(), HEX);
+  // Serial.print("Filt: ");
+  // for (uint8_t i=0; i<12; i++) {
+  //   Serial.print(cap.filteredData(i)); Serial.print("\t");
+  // }
+  // Serial.println();
+  // Serial.print("Base: ");
+  // for (uint8_t i=0; i<12; i++) {
+  //   Serial.print(cap.baselineData(i)); Serial.print("\t");
+  // }
+  // Serial.println();
+  // delay(500);
+
+}}
