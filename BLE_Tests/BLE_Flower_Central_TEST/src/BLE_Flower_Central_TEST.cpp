@@ -25,7 +25,7 @@ Adafruit_SSD1306 display(OLED_RESET);
 void setup() {
 	(void)logHandler; // Does nothing, just to eliminate the unused variable warning
 	Particle.variable("BatteryVolts", batVolts);
-	display.begin(SSD1306_SWITCHCAPVCC, 0x3D);
+	display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
 	display.clearDisplay();
 	display.setCursor(0,0);
 	display.setTextSize(2);

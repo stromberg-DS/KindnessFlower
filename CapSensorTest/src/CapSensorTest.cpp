@@ -11,21 +11,18 @@
 #include "Adafruit_MPR121.h"
 
 // Let Device OS manage the connection to the Particle Cloud
-SYSTEM_MODE(SEMI_AUTOMATIC);
+SYSTEM_MODE(AUTOMATIC);
 
 // Run the application and system concurrently in separate threads
 SYSTEM_THREAD(ENABLED);
-
-// Show system, cloud connectivity, and application logs over USB
-// View logs with CLI using 'particle serial monitor --follow'
-SerialLogHandler logHandler(LOG_LEVEL_INFO);
 
 Adafruit_MPR121 cap = Adafruit_MPR121();
 
 int lastTouched = 0;
 int currTouched = 0;
 bool isLedOn[12];
-int ledPins[6] = {3,4,5,6,7,10};
+int ledPins[6] = {3,4,5,6,7,10};    //Pins to attach LEDs to
+int lastPubTime = 0;
 
 // setup() runs once, when the device is first turned on
 void setup() {
@@ -58,10 +55,10 @@ void loop() {
   //
   for (int i=0; i<12; i++){
     if((currTouched & _BV(i)) && !(lastTouched & _BV(i))){
-      Serial.printf("%i Touched\n", i);
-      Serial.printf("CurrTouched: %i\n", currTouched);
-      Serial.printf("_BV(i) = %i\n", _BV(i));
-      Serial.printf("(currTouched & _BV(i)) = %i\n\n", currTouched & _BV(i));
+      // Serial.printf("%i Touched\n", i);
+      // Serial.printf("CurrTouched: %i\n", currTouched);
+      // Serial.printf("_BV(i) = %i\n", _BV(i));
+      // Serial.printf("(currTouched & _BV(i)) = %i\n\n", currTouched & _BV(i));
     }
 
     if((currTouched & _BV(i) && (lastTouched & _BV(i)))){
@@ -74,6 +71,12 @@ void loop() {
 
   for (int i=0; i<6; i++){
     digitalWrite(ledPins[i], isLedOn[i]);
+  }
+  
+  if(millis()-lastPubTime > 1000){
+    Serial.printf("Currently touched\n0:%i\n1:%i\n2:%i\n3:%i\n4:%i\n5:%i\n\n", isLedOn[0],isLedOn[1],isLedOn[2],isLedOn[3],isLedOn[4],isLedOn[5]);
+    
+    lastPubTime = millis();
   }
 
   lastTouched = currTouched;
