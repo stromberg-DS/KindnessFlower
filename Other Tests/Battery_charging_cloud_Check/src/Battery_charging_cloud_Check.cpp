@@ -22,7 +22,7 @@ bool isCharging;
 void setup() {
   Serial.begin(9600);
   Particle.variable("BatteryVolage", batVoltage);
-  Particle.variable("isCharging", isCharging);
+  // Particle.variable("isCharging", isCharging);   //This doesn't seem to work
 
   pinMode(batPin, INPUT);
   pinMode(CHG, INPUT_PULLUP); //tells us if we are charging. Might not work well
