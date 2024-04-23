@@ -16,6 +16,8 @@ SYSTEM_THREAD(ENABLED);
 //Constants
 const int LED_PIN = 2;
 const int PIXEL_COUNT = 144;
+const int touchPadCount = 8;
+const int touchPins[touchPadCount] = {1,2,4,5,6,8,9,10};
 //touch pins used:
 //  1,2,4,5,6,8,9,10
 
@@ -25,6 +27,7 @@ int lastTouched = 0;
 int currTouched = 0;
 int newBase;
 int newBaseCounter = 0;
+int ledPerPad = PIXEL_COUNT/touchPadCount;
     
 
 Adafruit_NeoPixel pixel(PIXEL_COUNT, SPI1, WS2812B);  
@@ -61,6 +64,7 @@ void loop() {
   int randomPixelNumber;
   int randomPixelColor;
 
+
   currTouched = capTouch.touched();
 
   if(newBaseCounter < 10){
@@ -69,20 +73,24 @@ void loop() {
     newBaseCounter++; //add one to counter
   }
 
-  if(newBase - capTouch.filteredData(2) > 12){
-    digitalWrite(7, HIGH);
-    pixelFill(0xFF0000);
-  } else{
-    digitalWrite(7, LOW);
-    pixelFill(0x00FF00);
+  int touchCount = 0;
+  for(int i=0; i<touchPadCount; i++){
+    if(newBase - capTouch.filteredData(touchPins[i]) > 12){
+      touchCount++;
+    } 
   }
+  pixel.clear();
+  pixelFill(0x00FF00, 0, touchCount*ledPerPad);
 
-  randomPixelNumber = random(PIXEL_COUNT);  //pick a random number between 0 and total number of pixels
-  randomPixelColor = random(0xFFFFFF);      //pick a random color between 0x000000 and 0xFFFFFF
+  // if(newBase - capTouch.filteredData(2) > 12){
+  //   digitalWrite(7, HIGH);
+  //   pixelFill(0xFF0000);
+  // } else{
+  //   digitalWrite(7, LOW);
+  //   pixelFill(0x00FF00);
+  // }
 
-  pixel.setPixelColor(randomPixelNumber, randomPixelColor);   //pick the pixel and set the color we want
   pixel.show();    //actually update the LED strip by showing the new color
-  delay(500);
 }
 
 void pixelFill(int fillColor, int startPixel, int endPixel){
