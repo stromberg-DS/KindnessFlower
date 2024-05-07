@@ -90,7 +90,7 @@ void loop() {
     Serial.printf("Currently touched\n0:%i\n1:%i\n2:%i\n3:%i\n4:%i\n5:%i\n\n", isLedOn[0],isLedOn[1],isLedOn[2],isLedOn[3],isLedOn[4],isLedOn[5]);
     
     lastPubTime = millis();
-  }
+  } 
   // for (int i=0; i<6; i++){
   //   digitalWrite(ledPins[i], isLedOn[i]);
   // }
