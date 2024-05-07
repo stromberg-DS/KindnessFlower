@@ -13,15 +13,17 @@ SYSTEM_MODE(AUTOMATIC);
 SYSTEM_THREAD(ENABLED);
 
 const int PIXEL_COUNT = 144;
+const int PIXEL_ZONES[6] = {24, 48, 72, 96, 120,144};
 const int PRESSURE_PINS[4] = {A0, A1, A2, A5};
 
-int brightness = 20;
+int brightness = 150;
 int pressureIn[6];
 
 Adafruit_NeoPixel pixel(PIXEL_COUNT, SPI1, WS2812);
 
 //functions
 void ledStripStartup();
+void ledFill(int color, int firstLED = 0, int lastLED = PIXEL_COUNT);
 
 void setup() {
 
@@ -35,6 +37,19 @@ void loop() {
     Serial.printf("Pressure: %i\n", pressureIn[0]);
     delay(100);
 
+    if(pressureIn[0] > 3300){
+        ledFill(0x00FF00, PIXEL_ZONES[0], PIXEL_ZONES[1]);
+    } else{
+        ledFill(0);
+    }
+
+    pixel.show();
+}
+
+void ledFill(int color, int firstLED, int lastLED) {
+    for (int i=firstLED; i<lastLED; i++){
+        pixel.setPixelColor(i, color);
+    }
 }
 
 void ledStripStartup(){
