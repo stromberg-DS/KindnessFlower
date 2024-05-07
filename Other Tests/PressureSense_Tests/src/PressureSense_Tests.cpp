@@ -12,7 +12,8 @@
 SYSTEM_MODE(AUTOMATIC);
 SYSTEM_THREAD(ENABLED);
 
-const int PIXEL_COUNT = 100;
+const int PIXEL_COUNT = 144;
+const int PRESSURE_PINS[4] = {A0, A1, A2, A5};
 
 int brightness = 20;
 int pressureIn[6];
@@ -25,10 +26,14 @@ void ledStripStartup();
 void setup() {
 
     ledStripStartup();
-
+    pinMode(PRESSURE_PINS[0], INPUT);
 }
 
 void loop() {
+    pressureIn[0] = analogRead(PRESSURE_PINS[0]);
+
+    Serial.printf("Pressure: %i\n", pressureIn[0]);
+    delay(100);
 
 }
 
