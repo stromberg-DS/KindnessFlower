@@ -14,7 +14,8 @@ SYSTEM_THREAD(ENABLED);
 
 const int PIXEL_COUNT = 144;
 const int PIXEL_ZONES[6] = {24, 48, 72, 96, 120,144};
-const int PRESSURE_PINS[4] = {A0, A1, A2, A5};
+const int PRESSURE_PINS[6] = {A0, A1, A2, A5, A4, A3};
+int pressureBaselines[6] = {2900, 3200, 2800, 3300, 2500, 2200};
 
 int brightness = 150;
 int pressureIn[6];
@@ -28,20 +29,32 @@ void ledFill(int color, int firstLED = 0, int lastLED = PIXEL_COUNT);
 void setup() {
 
     ledStripStartup();
-    pinMode(PRESSURE_PINS[0], INPUT);
+    for(int i=0; i<6; i++){
+        pinMode(PRESSURE_PINS[i], INPUT);
+    }
 }
 
 void loop() {
-    pressureIn[0] = analogRead(PRESSURE_PINS[0]);
-
-    Serial.printf("Pressure: %i\n", pressureIn[0]);
-    delay(100);
-
-    if(pressureIn[0] > 3300){
-        ledFill(0x00FF00, PIXEL_ZONES[0], PIXEL_ZONES[1]);
-    } else{
-        ledFill(0);
+    for(int i=0; i<6; i++){
+        pressureIn[i] = analogRead(PRESSURE_PINS[i]);
     }
+
+    for(int j=0; j<6; j++){
+        // Serial.printf("Pressure #%i: %i\n", j+1, pressureIn[j]);
+
+        if(pressureIn[j] > pressureBaselines[j]){
+            Serial.printf("pressureIn: %i\nBaseline: %i\n\n", pressureIn[j], pressureBaselines[j]);
+            ledFill(0x00FF00, j*24, (j+1)*24);
+            // ledFill(0x00FF00);
+        } else{
+            ledFill(0, j*24, (j+1)*24);
+            // ledFill(0);
+        }
+    }
+    // Serial.printf("\n");    
+    delay(5);
+
+    
 
     pixel.show();
 }
