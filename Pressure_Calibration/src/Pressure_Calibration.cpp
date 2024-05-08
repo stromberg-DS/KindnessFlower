@@ -15,7 +15,7 @@ SYSTEM_MODE(AUTOMATIC);
 SYSTEM_THREAD(ENABLED);
 
 const int SENSOR_COUNT = 6;
-const int SAMPLE_COUNT =10;
+const int SAMPLE_COUNT =100;
 const int PRESSURE_PINS[6] = {A0, A1, A2, A5, A4, A3};
 
 //EEPROM Setup 
@@ -28,11 +28,11 @@ int pressureSamples [SENSOR_COUNT][SAMPLE_COUNT];
 int avgBaselines[SENSOR_COUNT];
 bool isSampling = true;
 
-int testArray[SAMPLE_COUNT] = {9,9,9,9,9,9,8,8,3,4};
-
 void getSensorSamples();
 int getArrayAverage(int array[], int size);
 int get2DArrayAvg(int array[SENSOR_COUNT][SAMPLE_COUNT], int currentPin);
+int lastMillis = 0;
+bool isLEDOn = true;
 
 
 void setup() {
@@ -54,7 +54,6 @@ void setup() {
 void loop() {
   
   if (isSampling){
-    digitalWrite(D7, HIGH);
     getSensorSamples();
     Serial.printf("\n\n");
 
@@ -65,17 +64,20 @@ void loop() {
       avgBaselines[i] = get2DArrayAvg(pressureSamples, i);
       Serial.printf("    #%i - %i\n", i, avgBaselines[i]);
     }
-    EEPROM.put(baselineAddress, avgBaselines);
 
+    EEPROM.put(baselineAddress, avgBaselines);
     Serial.printf("\n\n");
-    // Serial.printf("Average of sensor 0: %i\n", avgBaselines[0]);
+  }else{
+    digitalWrite(D7, LOW);
   }
   isSampling = false;
-  digitalWrite(D7, LOW);
 
+  if(millis()-lastMillis> 1000){
+    isLEDOn = !isLEDOn;
+    lastMillis = millis();
+  }
 
-  // Serial.printf("Average of #0: %i\n", getArrayAverage(pressureSamples, SAMPLE_COUNT))
-
+  digitalWrite(D7, isLEDOn);
 }
 
 //Collect a bunch of samples from analog pins to be averaged later
