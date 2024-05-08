@@ -18,7 +18,7 @@ const int SENSOR_COUNT = 6;
 const int PIXEL_COUNT = 144;
 const int PIXEL_ZONES[SENSOR_COUNT] = {24, 48, 72, 96, 120,144};
 const int PRESSURE_PINS[SENSOR_COUNT] = {A0, A1, A2, A5, A4, A3};
-const int gripStrength = 40;     //how hard to squeeze to trigger LEDs. Higher=harder squeeze
+const int gripStrength = 200;     //how hard to squeeze to trigger LEDs. Higher=harder squeeze
 int pressureBaselines[SENSOR_COUNT];
 
 //EEPROM Setup 
