@@ -16,6 +16,12 @@ const int SENSOR_COUNT = 6;
 const int SAMPLE_COUNT =10;
 const int PRESSURE_PINS[6] = {A0, A1, A2, A5, A4, A3};
 
+//EEPROM Setup 
+int len = EEPROM.length();
+int baselineAddress = 0x0001;
+int lastBaselines[SENSOR_COUNT];
+
+
 int pressureSamples [SENSOR_COUNT][SAMPLE_COUNT];
 int avgBaselines[SENSOR_COUNT];
 bool isSampling = true;
@@ -29,12 +35,17 @@ int get2DArrayAvg(int array[SENSOR_COUNT][SAMPLE_COUNT], int currentPin);
 
 void setup() {
   Serial.begin(9600);
-
+  delay(5000);
   pinMode(D7, OUTPUT);
   digitalWrite(D7, LOW);
+
+  EEPROM.get(baselineAddress, lastBaselines);
+
   for(int i=0; i<SENSOR_COUNT; i++){
       pinMode(PRESSURE_PINS[i], INPUT);
+      Serial.printf("Last Avg #%i: %i\n",i , lastBaselines[i]);
   } 
+  Serial.printf("\n");
 
 }
 
@@ -52,6 +63,7 @@ void loop() {
       avgBaselines[i] = get2DArrayAvg(pressureSamples, i);
       Serial.printf("    #%i - %i\n", i, avgBaselines[i]);
     }
+    EEPROM.put(baselineAddress, avgBaselines);
 
     Serial.printf("\n\n");
     // Serial.printf("Average of sensor 0: %i\n", avgBaselines[0]);
