@@ -28,9 +28,10 @@ int get2DArrayAvg(int array[SENSOR_COUNT][SAMPLE_COUNT], int currentPin);
 
 
 void setup() {
-  delay(5000);
-  Serial.printf("Array Avg: %i\n", getArrayAverage(testArray, SAMPLE_COUNT));
+  Serial.begin(9600);
 
+  pinMode(D7, OUTPUT);
+  digitalWrite(D7, LOW);
   for(int i=0; i<SENSOR_COUNT; i++){
       pinMode(PRESSURE_PINS[i], INPUT);
   } 
@@ -38,13 +39,22 @@ void setup() {
 }
 
 void loop() {
-  digitalWrite(D7, HIGH);
-
+  
   if (isSampling){
+    digitalWrite(D7, HIGH);
     getSensorSamples();
     Serial.printf("\n\n");
+
     avgBaselines[0] = get2DArrayAvg(pressureSamples, 0);
-    Serial.printf("Average of sensor 0: %i\n", avgBaselines[0]);
+
+    Serial.printf("Averages: \n");
+    for (int i; i<SENSOR_COUNT; i++){
+      avgBaselines[i] = get2DArrayAvg(pressureSamples, i);
+      Serial.printf("    #%i - %i\n", i, avgBaselines[i]);
+    }
+
+    Serial.printf("\n\n");
+    // Serial.printf("Average of sensor 0: %i\n", avgBaselines[0]);
   }
   isSampling = false;
   digitalWrite(D7, LOW);
@@ -56,12 +66,13 @@ void loop() {
 
 //Collect a bunch of samples from analog pins to be averaged later
 void getSensorSamples(){
-  for(int i=0; i<SAMPLE_COUNT; i++){
+  for(int i=0; i<SAMPLE_COUNT; i++){      
       Serial.printf("Sample #%i\n", i);
-      for(int j=0; j<SENSOR_COUNT; j++){
+      for(int j=0; j<SENSOR_COUNT; j++){    
         pressureSamples[j][i] = analogRead(PRESSURE_PINS[j]);
         Serial.printf("   #%i: %i\n", j, pressureSamples[j][i]);
       }
+      delay(100);
       Serial.printf("\n");
       
     } 
@@ -78,17 +89,5 @@ int get2DArrayAvg(int array[SENSOR_COUNT][SAMPLE_COUNT], int currentPin){
   }
   average = int(total/SAMPLE_COUNT);
   
-  return average;
-}
-
-int getArrayAverage(int array[], int size){
-  int j;
-  int average = 0;
-  int total = 0;
-  for(j=0; j<size; j++){
-    total += array[j];
-  }
-  average = int(total/size);
-
   return average;
 }
