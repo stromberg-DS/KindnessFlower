@@ -89,6 +89,7 @@ void ledStripStartup(){
 
     //Quick test of all LEDs to make sure the strip works. 
     for (int i=0; i < PIXEL_COUNT; i++){
+        pixel.clear();
         pixel.setPixelColor(i, 0xFFFFFF);
         pixel.show();
         delay(20);
