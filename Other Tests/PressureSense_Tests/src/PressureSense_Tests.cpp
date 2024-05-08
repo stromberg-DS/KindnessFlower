@@ -9,16 +9,25 @@
 #include "Particle.h"
 #include <neopixel.h>
 
+////////KEEEP AUTOMATIC///////////
 SYSTEM_MODE(AUTOMATIC);
+/////////////////////////////////
 SYSTEM_THREAD(ENABLED);
 
+const int SENSOR_COUNT = 6;
 const int PIXEL_COUNT = 144;
-const int PIXEL_ZONES[6] = {24, 48, 72, 96, 120,144};
-const int PRESSURE_PINS[6] = {A0, A1, A2, A5, A4, A3};
-int pressureBaselines[6] = {2900, 3200, 2800, 3300, 2500, 2200};
+const int PIXEL_ZONES[SENSOR_COUNT] = {24, 48, 72, 96, 120,144};
+const int PRESSURE_PINS[SENSOR_COUNT] = {A0, A1, A2, A5, A4, A3};
+const int gripStrength = 40;     //how hard to squeeze to trigger LEDs. Higher=harder squeeze
+int pressureBaselines[SENSOR_COUNT];
+
+//EEPROM Setup 
+int len = EEPROM.length();
+int baselineAddress = 0x0001;
+
 
 int brightness = 150;
-int pressureIn[6];
+int pressureIn[SENSOR_COUNT];
 
 Adafruit_NeoPixel pixel(PIXEL_COUNT, SPI1, WS2812);
 
@@ -27,11 +36,18 @@ void ledStripStartup();
 void ledFill(int color, int firstLED = 0, int lastLED = PIXEL_COUNT);
 
 void setup() {
+    EEPROM.get(baselineAddress, pressureBaselines);
+
 
     ledStripStartup();
+
+    Serial.printf("#### Incoming Average Baselines ####");
+
     for(int i=0; i<6; i++){
         pinMode(PRESSURE_PINS[i], INPUT);
+        Serial.printf("Last Avg #%i: %i\n",i , pressureBaselines[i]);
     }
+    Serial.printf("\n\n");
 }
 
 void loop() {
@@ -42,8 +58,8 @@ void loop() {
     for(int j=0; j<6; j++){
         // Serial.printf("Pressure #%i: %i\n", j+1, pressureIn[j]);
 
-        if(pressureIn[j] > pressureBaselines[j]){
-            Serial.printf("pressureIn: %i\nBaseline: %i\n\n", pressureIn[j], pressureBaselines[j]);
+        if(pressureIn[j] - pressureBaselines[j] > gripStrength){
+            // Serial.printf("pressureIn: %i\nBaseline: %i\n\n", pressureIn[j], pressureBaselines[j]);
             ledFill(0x00FF00, j*24, (j+1)*24);
             // ledFill(0x00FF00);
         } else{
