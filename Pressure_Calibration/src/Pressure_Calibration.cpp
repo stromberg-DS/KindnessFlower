@@ -9,7 +9,9 @@
 
 #include "Particle.h"
 
-SYSTEM_MODE(MANUAL);
+////////KEEEP AUTOMATIC///////////
+SYSTEM_MODE(AUTOMATIC);
+/////////////////////////////////
 SYSTEM_THREAD(ENABLED);
 
 const int SENSOR_COUNT = 6;
