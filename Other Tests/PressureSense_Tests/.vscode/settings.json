@@ -4,5 +4,5 @@
     "files.associations": {
         "*.ino": "cpp"
     },
-    "particle.targetDevice": "SciKiFlower_1"
+    "particle.targetDevice": "SciKiFlower_2"
 }

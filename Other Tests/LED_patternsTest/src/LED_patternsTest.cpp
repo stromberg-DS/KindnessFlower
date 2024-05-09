@@ -19,6 +19,8 @@ int brightness = 30;
 int pixelDelay = 50;
 int pixelCycle = 0;
 unsigned long pixelPrevious = 0;
+int passCount = 0; //total number of passes between people
+bool isFirstPass = true;
 
 Adafruit_NeoPixel pixel(PIXEL_COUNT, SPI1, WS2812);
 
