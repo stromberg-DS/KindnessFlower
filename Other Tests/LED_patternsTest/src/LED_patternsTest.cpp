@@ -10,8 +10,10 @@
 SYSTEM_MODE(AUTOMATIC);
 SYSTEM_THREAD(ENABLED);
 
+const int SENSOR_COUNT =4;
 const int PIXEL_COUNT = 144;
 const int TOUCH_PINS[] = {4, 5, 6, 7};
+const int PIXELs_PER_SEGMENT = PIXEL_COUNT/SENSOR_COUNT;
 
 int brightness = 30;
 int pixelDelay = 50;
@@ -67,9 +69,9 @@ void loop() {
     } else{
         for(int j=0; j<4; j++){
             if((isPressed[j])){
-                ledFill(0x00FF00, j*63, (j+1)*63);
+                ledFill(0x00FF00, j*PIXELs_PER_SEGMENT, (j+1)*PIXELs_PER_SEGMENT);
             } else{
-                ledFill(0, j*63, (j+1)*63);
+                ledFill(0, j*PIXELs_PER_SEGMENT, (j+1)*PIXELs_PER_SEGMENT);
             }
 
         }
