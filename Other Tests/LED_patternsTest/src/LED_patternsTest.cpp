@@ -11,6 +11,7 @@ SYSTEM_MODE(AUTOMATIC);
 SYSTEM_THREAD(ENABLED);
 
 const int PIXEL_COUNT = 144;
+const int TOUCH_PINS[] = {4, 5, 6, 7};
 
 int brightness = 30;
 int pixelDelay = 50;
@@ -21,6 +22,7 @@ Adafruit_NeoPixel pixel(PIXEL_COUNT, SPI1, WS2812);
 
 uint32_t wheel(byte wheelPos);
 void rainbow(uint8_t wait);
+void ledFill(int color, int firstLED=0, int lastLED=PIXEL_COUNT);
 
 void setup() {
     Serial.begin(9600);
@@ -29,6 +31,10 @@ void setup() {
     pixel.setBrightness(brightness);
     pixel.clear();
     pixel.show();
+
+    for(int i=0; i<4; i++){
+        pinMode(TOUCH_PINS[i], INPUT_PULLDOWN);
+    }
 
     for (int i=0; i < PIXEL_COUNT; i++){
         pixel.clear();
@@ -39,9 +45,41 @@ void setup() {
 }
 
 void loop() {
-    if(millis() - pixelPrevious >= pixelDelay){
-        pixelPrevious = millis();
-        rainbow(2);
+    static int lastPrint;
+    static bool isPressed[4];
+
+    if(millis() - lastPrint > 500){
+        Serial.printf("Pressed Buttons: ");
+        for(int i=0; i <4; i++){
+            isPressed[i] = digitalRead(TOUCH_PINS[i]);
+            Serial.printf("%i,", isPressed[i]);
+        }
+        Serial.printf("\n\n");
+        lastPrint = millis();
+    }
+
+    
+    if((isPressed[0]) && (isPressed[1]) && (isPressed[2]) && (isPressed[3])){
+        if(millis() - pixelPrevious >= pixelDelay){
+            pixelPrevious = millis();
+            rainbow(10);
+        }
+    } else{
+        for(int j=0; j<4; j++){
+            if((isPressed[j])){
+                ledFill(0x00FF00, j*63, (j+1)*63);
+            } else{
+                ledFill(0, j*63, (j+1)*63);
+            }
+
+        }
+        pixel.show();
+    }
+}
+
+void ledFill(int color, int firstLED, int lastLED) {
+    for (int i=firstLED; i<lastLED; i++){
+        pixel.setPixelColor(i, color);
     }
 }
 
