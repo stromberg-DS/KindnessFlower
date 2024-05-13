@@ -16,7 +16,8 @@ SYSTEM_THREAD(ENABLED);
 
 const int SENSOR_COUNT = 4;
 const int SAMPLE_COUNT =100;
-const int PRESSURE_PINS[SENSOR_COUNT] = {A0, A1, A2, A5};  //, A4, A3};
+//Below MUST match the order in the final code
+const int PRESSURE_PINS[SENSOR_COUNT] = {A5, A0, A2, A1}; 
 
 //EEPROM Setup 
 int len = EEPROM.length();
