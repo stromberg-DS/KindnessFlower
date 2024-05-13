@@ -27,6 +27,7 @@ int lastBaselines[SENSOR_COUNT];
 int pressureSamples [SENSOR_COUNT][SAMPLE_COUNT];
 int avgBaselines[SENSOR_COUNT];
 bool isSampling = true;
+String pubText[4] = {"Baseline #1", "Baseline #2", "Baseline #3", "Baseline #4"};
 
 void getSensorSamples();
 int getArrayAverage(int array[], int size);
@@ -53,7 +54,7 @@ void setup() {
 
 void loop() {
   
-  if (isSampling){
+  if (isSampling){    //only go through this once
     getSensorSamples();
     Serial.printf("\n\n");
 
@@ -67,6 +68,13 @@ void loop() {
 
     EEPROM.put(baselineAddress, avgBaselines);
     Serial.printf("\n\n");
+
+    //Send baselines to Particle Cloud
+    Particle.publish("Done Sampling!");
+    for (int j=0; j<SENSOR_COUNT; j++){
+      Particle.publish(String(pubText[j]), String(avgBaselines[j]));
+      delay(1000);
+    }
   }else{
     digitalWrite(D7, LOW);
   }
