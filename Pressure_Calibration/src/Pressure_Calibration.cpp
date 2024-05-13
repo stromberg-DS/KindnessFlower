@@ -14,9 +14,9 @@ SYSTEM_MODE(AUTOMATIC);
 /////////////////////////////////
 SYSTEM_THREAD(ENABLED);
 
-const int SENSOR_COUNT = 6;
+const int SENSOR_COUNT = 4;
 const int SAMPLE_COUNT =100;
-const int PRESSURE_PINS[6] = {A0, A1, A2, A5, A4, A3};
+const int PRESSURE_PINS[SENSOR_COUNT] = {A0, A1, A2, A5};  //, A4, A3};
 
 //EEPROM Setup 
 int len = EEPROM.length();
