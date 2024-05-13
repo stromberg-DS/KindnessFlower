@@ -24,32 +24,39 @@ SYSTEM_THREAD(ENABLED);
 
 const int SENSOR_COUNT = 4;
 const int PIXEL_COUNT = 144;
-const int PIXEL_ZONES[SENSOR_COUNT] = {36, 72, 108, 144};
-const int PRESSURE_PINS[SENSOR_COUNT] = {A2, A1, A0, A5};
-const int gripStrength = 200;     //how hard to squeeze to trigger LEDs. Higher=harder squeeze
+const int PIXELS_PER_SEGMENT = 36;
+const int PRESSURE_PINS[SENSOR_COUNT] = {A5, A0, A2, A1};
+const int gripStrength = 400;     //how hard to squeeze to trigger LEDs. Higher=harder squeeze
 int pressureBaselines[SENSOR_COUNT];
 
 //EEPROM Setup 
 int len = EEPROM.length();
-int baselineAddress = 0x0001;
+const int BASELINE_ADDRESS = 0x0001;
 
-int brightness = 150;
+int brightness = 30;
+int pixelDelay = 50;
+unsigned long pixelPrevious = 0;
+int pixelCycle = 0;
 int pressureIn[SENSOR_COUNT];
+bool areAllPressed = false;
+bool isPadPressed[SENSOR_COUNT];
+
+int passCount = 0;
+bool isFirstPass = true;
 
 Adafruit_NeoPixel pixel(PIXEL_COUNT, SPI1, WS2812);
 
 //functions
 void ledStripStartup();
 void ledFill(int color, int firstLED = 0, int lastLED = PIXEL_COUNT);
+uint32_t wheel(byte wheelPos);
+void rainbow(uint8_t wait);
 
 void setup() {
-    EEPROM.get(baselineAddress, pressureBaselines);
-
-
+    EEPROM.get(BASELINE_ADDRESS, pressureBaselines);
     ledStripStartup();
 
     Serial.printf("#### Incoming Average Baselines ####\n");
-
     for(int i=0; i<SENSOR_COUNT; i++){
         pinMode(PRESSURE_PINS[i], INPUT);
         Serial.printf("Last Avg #%i: %i\n",i , pressureBaselines[i]);
@@ -62,21 +69,31 @@ void loop() {
         pressureIn[i] = analogRead(PRESSURE_PINS[i]);
     }
 
+    areAllPressed = true;
     for(int j=0; j<SENSOR_COUNT; j++){
-        // Serial.printf("Pressure #%i: %i\n", j+1, pressureIn[j]);
-
         if(pressureIn[j] - pressureBaselines[j] > gripStrength){
-            // Serial.printf("pressureIn: %i\nBaseline: %i\n\n", pressureIn[j], pressureBaselines[j]);
-            ledFill(0x00FF00, j*24, (j+1)*24);
-            // ledFill(0x00FF00);
+            isPadPressed[j] = true;
         } else{
-            ledFill(0, j*24, (j+1)*24);
-            // ledFill(0);
+            isPadPressed[j] = false;
+            areAllPressed = false;
         }
     }
-    // Serial.printf("\n");    
-    delay(5);
 
+    if(areAllPressed){
+        if(millis() - pixelPrevious >= pixelDelay){
+            pixelPrevious = millis();
+            rainbow(1);
+        }
+    } else{
+        for(int k=0; k<SENSOR_COUNT; k++){
+            if((isPadPressed[k])){
+                ledFill(0x00FF00, k*PIXELS_PER_SEGMENT, (k+1)*PIXELS_PER_SEGMENT);
+            } else{
+                ledFill(0, k*PIXELS_PER_SEGMENT, (k+1)*PIXELS_PER_SEGMENT);
+            }
+
+        }
+    }
     
 
     pixel.show();
@@ -106,4 +123,35 @@ void ledStripStartup(){
 
     pixel.clear();
     pixel.show();
+}
+
+void rainbow(uint8_t wait){
+    if(pixelDelay != wait){
+        pixelDelay = wait;
+    }
+
+    for(uint16_t i=0; i<PIXEL_COUNT; i++){
+        pixel.setPixelColor(i, wheel((i+pixelCycle) &255));
+    }
+    pixel.show();
+    pixelCycle++;
+    if(pixelCycle >= 256){
+        pixelCycle =0;
+    }
+}
+
+//No i don't understand exactly what this does
+//input a value 0-255 to get a color value.
+uint32_t wheel(byte wheelPos){
+    wheelPos = 255 - wheelPos;
+    if(wheelPos < 85){
+        return pixel.Color(255-wheelPos*3, 0, wheelPos * 3);
+    }
+
+    if(wheelPos < 170){
+        wheelPos -= 85;
+        return pixel.Color(0, wheelPos*3, 255-wheelPos*3);
+    }
+    wheelPos -=170;
+    return pixel.Color(wheelPos*3, 255-wheelPos*3, 0);
 }
