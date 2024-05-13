@@ -14,10 +14,10 @@ SYSTEM_MODE(AUTOMATIC);
 /////////////////////////////////
 SYSTEM_THREAD(ENABLED);
 
-const int SENSOR_COUNT = 6;
+const int SENSOR_COUNT = 4;
 const int PIXEL_COUNT = 144;
-const int PIXEL_ZONES[SENSOR_COUNT] = {24, 48, 72, 96, 120,144};
-const int PRESSURE_PINS[SENSOR_COUNT] = {A0, A1, A2, A5, A4, A3};
+const int PIXEL_ZONES[SENSOR_COUNT] = {36, 72, 108, 144};
+const int PRESSURE_PINS[SENSOR_COUNT] = {A5, A0, A2, A1};
 const int gripStrength = 200;     //how hard to squeeze to trigger LEDs. Higher=harder squeeze
 int pressureBaselines[SENSOR_COUNT];
 
@@ -43,7 +43,7 @@ void setup() {
 
     Serial.printf("#### Incoming Average Baselines ####");
 
-    for(int i=0; i<6; i++){
+    for(int i=0; i<SENSOR_COUNT; i++){
         pinMode(PRESSURE_PINS[i], INPUT);
         Serial.printf("Last Avg #%i: %i\n",i , pressureBaselines[i]);
     }
@@ -51,24 +51,26 @@ void setup() {
 }
 
 void loop() {
-    for(int i=0; i<6; i++){
+    for(int i=0; i<SENSOR_COUNT; i++){
         pressureIn[i] = analogRead(PRESSURE_PINS[i]);
     }
 
-    for(int j=0; j<6; j++){
-        // Serial.printf("Pressure #%i: %i\n", j+1, pressureIn[j]);
+    for(int j=0; j<SENSOR_COUNT; j++){
 
         if(pressureIn[j] - pressureBaselines[j] > gripStrength){
-            // Serial.printf("pressureIn: %i\nBaseline: %i\n\n", pressureIn[j], pressureBaselines[j]);
-            ledFill(0x00FF00, j*24, (j+1)*24);
+            ledFill(0x00FF00, PIXEL_ZONES[j], PIXEL_ZONES[j+1]);
+            Serial.printf("Pressure #%i: \n", j);
+            Serial.printf("pressureIn: %i\nBaseline: %i\n\n", pressureIn[j], pressureBaselines[j]);
+            ledFill(0xFF0000, j, j+1);
             // ledFill(0x00FF00);
         } else{
-            ledFill(0, j*24, (j+1)*24);
+            ledFill(0, PIXEL_ZONES[j], PIXEL_ZONES[j+1]);
+            ledFill(0, j, j+1);
             // ledFill(0);
         }
     }
     // Serial.printf("\n");    
-    delay(5);
+    delay(250);
 
     
 
