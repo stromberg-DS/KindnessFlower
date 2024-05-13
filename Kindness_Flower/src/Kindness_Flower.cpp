@@ -9,9 +9,9 @@
  *      the flower gets closer.
  * Author: Daniel Stromberg
  * Date: 5/13/24
- * 
- * Use the Adafruit guide to set up FSRs from Adafruit (ID:1075)
- *  https://learn.adafruit.com/force-sensitive-resistor-fsr/using-an-fsr
+ * Parts:
+ *      Use the Adafruit guide to set up FSRs from Adafruit (ID:1075)
+ *      https://learn.adafruit.com/force-sensitive-resistor-fsr/using-an-fsr
  */
 
 #include "Particle.h"
@@ -22,17 +22,16 @@ SYSTEM_MODE(AUTOMATIC);
 /////////////////////////////////
 SYSTEM_THREAD(ENABLED);
 
-const int SENSOR_COUNT = 6;
+const int SENSOR_COUNT = 4;
 const int PIXEL_COUNT = 144;
-const int PIXEL_ZONES[SENSOR_COUNT] = {24, 48, 72, 96, 120,144};
-const int PRESSURE_PINS[SENSOR_COUNT] = {A0, A1, A2, A5, A4, A3};
+const int PIXEL_ZONES[SENSOR_COUNT] = {36, 72, 108, 144};
+const int PRESSURE_PINS[SENSOR_COUNT] = {A2, A1, A0, A5};
 const int gripStrength = 200;     //how hard to squeeze to trigger LEDs. Higher=harder squeeze
 int pressureBaselines[SENSOR_COUNT];
 
 //EEPROM Setup 
 int len = EEPROM.length();
 int baselineAddress = 0x0001;
-
 
 int brightness = 150;
 int pressureIn[SENSOR_COUNT];
@@ -49,9 +48,9 @@ void setup() {
 
     ledStripStartup();
 
-    Serial.printf("#### Incoming Average Baselines ####");
+    Serial.printf("#### Incoming Average Baselines ####\n");
 
-    for(int i=0; i<6; i++){
+    for(int i=0; i<SENSOR_COUNT; i++){
         pinMode(PRESSURE_PINS[i], INPUT);
         Serial.printf("Last Avg #%i: %i\n",i , pressureBaselines[i]);
     }
@@ -59,11 +58,11 @@ void setup() {
 }
 
 void loop() {
-    for(int i=0; i<6; i++){
+    for(int i=0; i<SENSOR_COUNT; i++){
         pressureIn[i] = analogRead(PRESSURE_PINS[i]);
     }
 
-    for(int j=0; j<6; j++){
+    for(int j=0; j<SENSOR_COUNT; j++){
         // Serial.printf("Pressure #%i: %i\n", j+1, pressureIn[j]);
 
         if(pressureIn[j] - pressureBaselines[j] > gripStrength){
