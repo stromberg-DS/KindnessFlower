@@ -26,7 +26,7 @@ const int SENSOR_COUNT = 4;
 const int PIXEL_COUNT = 144;
 const int PIXELS_PER_SEGMENT = 36;
 const int PRESSURE_PINS[SENSOR_COUNT] = {A5, A0, A2, A1};
-const int gripStrength = 400;     //how hard to squeeze to trigger LEDs. Higher=harder squeeze
+const int gripStrength = 200;     //how hard to squeeze to trigger LEDs. Higher=harder squeeze
 int pressureBaselines[SENSOR_COUNT];
 
 //EEPROM Setup 
@@ -43,6 +43,8 @@ bool isPadPressed[SENSOR_COUNT];
 
 int passCount = 0;
 bool isFirstPass = true;
+double batVoltage;
+int batPin = A6;
 
 Adafruit_NeoPixel pixel(PIXEL_COUNT, SPI1, WS2812);
 
@@ -54,7 +56,10 @@ void rainbow(uint8_t wait);
 
 void setup() {
     EEPROM.get(BASELINE_ADDRESS, pressureBaselines);
+    pinMode(batPin, INPUT);
     ledStripStartup();
+
+    Particle.variable("BatteryVoltage", batVoltage);
 
     Serial.printf("#### Incoming Average Baselines ####\n");
     for(int i=0; i<SENSOR_COUNT; i++){
@@ -65,6 +70,7 @@ void setup() {
 }
 
 void loop() {
+    batVoltage = analogRead(batPin)/819.2;
     for(int i=0; i<SENSOR_COUNT; i++){
         pressureIn[i] = analogRead(PRESSURE_PINS[i]);
     }
@@ -85,6 +91,7 @@ void loop() {
             rainbow(1);
         }
     } else{
+        isFirstPass = true;
         for(int k=0; k<SENSOR_COUNT; k++){
             if((isPadPressed[k])){
                 ledFill(0x00FF00, k*PIXELS_PER_SEGMENT, (k+1)*PIXELS_PER_SEGMENT);
@@ -95,6 +102,13 @@ void loop() {
         }
     }
     
+    if(isFirstPass && areAllPressed){
+        passCount++;
+        isFirstPass = false;
+        Serial.printf("Pass Count: %i\n", passCount);
+        Particle.publish("Pass Count", String(passCount));
+    }
+
 
     pixel.show();
 }
