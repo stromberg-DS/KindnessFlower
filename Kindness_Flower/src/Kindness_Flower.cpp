@@ -16,6 +16,10 @@
 
 #include "Particle.h"
 #include <neopixel.h>
+#include "credentials.h"
+#include <Adafruit_MQTT.h>
+#include "Adafruit_MQTT/Adafruit_MQTT_SPARK.h"
+#include "Adafruit_MQTT/Adafruit_MQTT.h"
 
 ////////KEEEP AUTOMATIC///////////
 SYSTEM_MODE(AUTOMATIC);
@@ -45,10 +49,17 @@ int passCount = 0;
 bool isFirstPass = true;
 double batVoltage;
 int batPin = A6;
+unsigned int lastPublishTime = 0;
 
 Adafruit_NeoPixel pixel(PIXEL_COUNT, SPI1, WS2812);
+TCPClient TheClient;
+Adafruit_MQTT_SPARK mqtt(&TheClient, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
+Adafruit_MQTT_Publish battPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower2battery");
+Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower2passcount");
 
 //functions
+void MQTT_connect();
+bool MQTT_ping();
 void ledStripStartup();
 void ledFill(int color, int firstLED = 0, int lastLED = PIXEL_COUNT);
 uint32_t wheel(byte wheelPos);
@@ -70,6 +81,8 @@ void setup() {
 }
 
 void loop() {
+    MQTT_connect();
+    MQTT_ping();
     batVoltage = analogRead(batPin)/819.2;
     for(int i=0; i<SENSOR_COUNT; i++){
         pressureIn[i] = analogRead(PRESSURE_PINS[i]);
@@ -104,12 +117,20 @@ void loop() {
     
     if(isFirstPass && areAllPressed){
         passCount++;
+        if(mqtt.Update()){
+            passPub.publish(passCount);
+        }
         isFirstPass = false;
         Serial.printf("Pass Count: %i\n", passCount);
         Particle.publish("Pass Count", String(passCount));
     }
 
-
+    if(millis() - lastPublishTime > 30000){
+        if(mqtt.Update()){
+            battPub.publish(batVoltage);
+        }
+        lastPublishTime = millis();
+    }
     pixel.show();
 }
 
@@ -168,4 +189,42 @@ uint32_t wheel(byte wheelPos){
     }
     wheelPos -=170;
     return pixel.Color(wheelPos*3, 255-wheelPos*3, 0);
+}
+
+// Function to connect and reconnect as necessary to the MQTT server.
+// Should be called in the loop function and it will take care of connecting.
+void MQTT_connect(){
+    int8_t ret;
+
+    // Return if already connected.
+    if (mqtt.connected()){
+        return;
+    }
+
+    Serial.print("Connecting to MQTT... ");
+
+    while((ret = mqtt.connect()) != 0){
+        Serial.printf("Error Code %s\n", mqtt.connectErrorString(ret));
+        Serial.printf("Retrying MQTT connection in 5 seconds...\n");
+        mqtt.disconnect();
+        delay(5000);
+    }
+    Serial.printf("MQTT Connected!\n");
+}
+
+//Keeps the connection open to Adafruit
+bool MQTT_ping() {
+    static unsigned int last;
+    bool pingStatus;
+
+    if ((millis()-last)>120000) {
+        Serial.printf("Pinging MQTT \n");
+        pingStatus = mqtt.ping();
+        if(!pingStatus) {
+        Serial.printf("Disconnecting \n");
+        mqtt.disconnect();
+        }
+        last = millis();
+    }
+    return pingStatus;
 }
