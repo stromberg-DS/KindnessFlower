@@ -50,6 +50,7 @@ bool isFirstPass = true;
 double batVoltage;
 int batPin = A6;
 unsigned int lastPublishTime = 0;
+unsigned int lastPassTime = 0;
 
 Adafruit_NeoPixel pixel(PIXEL_COUNT, SPI1, WS2812);
 TCPClient TheClient;
@@ -115,11 +116,9 @@ void loop() {
         }
     }
     
-    if(isFirstPass && areAllPressed){
+    if(isFirstPass && areAllPressed && (millis()-lastPassTime > 30000)){
         passCount++;
-        if(mqtt.Update()){
-            passPub.publish(passCount);
-        }
+        lastPassTime = millis();
         isFirstPass = false;
         Serial.printf("Pass Count: %i\n", passCount);
         Particle.publish("Pass Count", String(passCount));
@@ -128,6 +127,7 @@ void loop() {
     if(millis() - lastPublishTime > 30000){
         if(mqtt.Update()){
             battPub.publish(batVoltage);
+            passPub.publish(passCount);
         }
         lastPublishTime = millis();
     }
