@@ -36,6 +36,7 @@ void ledStripStartup();
 void ledFill(int color, int firstLED = 0, int lastLED = PIXEL_COUNT);
 
 void setup() {
+    Serial.begin(9600);
     EEPROM.get(baselineAddress, pressureBaselines);
 
 
