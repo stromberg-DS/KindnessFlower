@@ -37,7 +37,7 @@ int pressureBaselines[SENSOR_COUNT];
 int len = EEPROM.length();
 const int BASELINE_ADDRESS = 0x0001;
 
-int brightness = 30;
+int brightness = 255;
 int pixelDelay = 50;
 unsigned long pixelPrevious = 0;
 int pixelCycle = 0;
