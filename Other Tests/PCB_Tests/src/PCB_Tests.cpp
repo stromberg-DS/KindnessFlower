@@ -9,17 +9,22 @@
 SYSTEM_MODE(MANUAL);
 SYSTEM_THREAD(ENABLED);
 
-const int SENSOR_PIN = A0;
+const int SENSOR_PINS[4] = {A5, A0, A2, A1};
 
 void setup() {
     Serial.begin(9600);
-    pinMode(SENSOR_PIN, INPUT);
+    for (int i=0; i<4; i++){
+        pinMode(SENSOR_PINS[i], INPUT);
+    }
+
 }
 
 void loop() {
-    int fsrRead;
-    fsrRead = analogRead(SENSOR_PIN);
-    Serial.printf("Sensor Value: %i\n\n", fsrRead);
-    
+    int fsrRead[4];
+    for (int i=0; i<4; i++){
+        fsrRead[i] = analogRead(SENSOR_PINS[i]);
+        Serial.printf("Sensor %i Value: %i\n", i, fsrRead[i]);
+    }
+    Serial.printf("\n");
     delay(250);
 }
