@@ -9,9 +9,16 @@
 #include "Adafruit_MQTT/Adafruit_MQTT_SPARK.h"
 #include "Adafruit_MQTT/Adafruit_MQTT.h"
 #include "credentials.h"
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
 
 SYSTEM_MODE(AUTOMATIC);
 SYSTEM_THREAD(ENABLED);
+
+//constants
+const int OLED_RESET = -1;
+const int OLED_ADDRESS = 0x3C;
+
 
 //Variables
 int flower1Count;
@@ -26,17 +33,31 @@ int lastPubTime = 0;
 void MQTT_connect();
 bool MQTT_ping();
 void adaPublish();
+void updateDisplay(int count);
 
 TCPClient TheClient;
 Adafruit_MQTT_SPARK mqtt(&TheClient, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
 Adafruit_MQTT_Subscribe flower4Sub = Adafruit_MQTT_Subscribe(&mqtt, AIO_USERNAME "/feeds/flower4passcount");
 Adafruit_MQTT_Publish totalPassPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/totalflowerpass");
 
+Adafruit_SSD1306 display(OLED_RESET);
+
+String DateTime, TimeOnly, Day, MonthDate, Year;
 
 void setup() {
     Serial.begin(9600);
 
     mqtt.subscribe(&flower4Sub);
+    Time.zone(-7);
+    Particle.syncTime();
+
+    display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDRESS);
+    display.clearDisplay();
+    display.setTextColor(WHITE);
+    display.setTextSize(2);
+    display.setCursor(0,0);
+    display.printf("HI");
+    display.display();
 }
 
 void loop() {
@@ -48,7 +69,9 @@ void loop() {
         if(subscription == &flower4Sub){
             flower4Count = strtol((char *)flower4Sub.lastread, NULL, 10);
             Serial.printf("Incoming Flower2 Count: %i\n", flower4Count);
+            totalPassCount = flower4Count;
             adaPublish();
+            updateDisplay(totalPassCount);
         }
     }
 }
@@ -61,6 +84,16 @@ void adaPublish(){
             lastPubTime = millis();
         }
     }
+}
+
+void updateDisplay(int count){
+    display.clearDisplay();
+    display.setCursor(0,0);
+    display.setTextSize(1);
+    display.printf("Total Passes:\n\n");
+    display.setTextSize(6);
+    display.printf(" %i", count);
+    display.display();
 }
 
 // Function to connect and reconnect as necessary to the MQTT server.
