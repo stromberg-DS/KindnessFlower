@@ -33,7 +33,7 @@ int ledPerPad = PIXEL_COUNT/touchPadCount;
 double batVoltage;
     
 
-Adafruit_NeoPixel pixel(PIXEL_COUNT, SPI1, WS2812B);  
+Adafruit_NeoPixel pixel(PIXEL_COUNT, SPI1, WS2812);  
 Adafruit_MPR121 capTouch = Adafruit_MPR121();
 
 void pixelFill(int fillColor, int startPixel=0, int endPixel=PIXEL_COUNT);
@@ -53,7 +53,7 @@ void setup() {
   
   //Quick test of all LEDs to make sure the strip works. 
   for (int i=0; i < PIXEL_COUNT; i++){
-    pixel.setPixelColor(i, 0xFFFFFF);
+    pixel.setPixelColor(i, 0xFF0000);
     pixel.show();
     delay(20);
   }

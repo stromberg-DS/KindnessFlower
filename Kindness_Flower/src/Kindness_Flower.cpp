@@ -27,11 +27,11 @@ SYSTEM_MODE(AUTOMATIC);
 SYSTEM_THREAD(ENABLED);
 
 const int SENSOR_COUNT = 4;
-const int PIXEL_COUNT = 144;
-const int PIXELS_PER_SEGMENT = 36;
+const int PIXEL_COUNT = 112;
+const int PIXELS_PER_SEGMENT = 28;
 const int PRESSURE_PINS[SENSOR_COUNT] = {A5, A0, A2, A1};
-const int gripStrength = 200;     //how hard to squeeze to trigger LEDs. Higher=harder squeeze
 int pressureBaselines[SENSOR_COUNT];
+int gripThreshold[SENSOR_COUNT];    //NewThreshold values: halfway between baseline and max (4096)
 
 //EEPROM Setup 
 int len = EEPROM.length();
@@ -51,12 +51,13 @@ double batVoltage;
 int batPin = A6;
 unsigned int lastPublishTime = 0;
 unsigned int lastPassTime = 0;
+unsigned int lastSensorPrintTime = 0;
 
 Adafruit_NeoPixel pixel(PIXEL_COUNT, SPI1, WS2812);
 TCPClient TheClient;
 Adafruit_MQTT_SPARK mqtt(&TheClient, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
-Adafruit_MQTT_Publish battPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower2battery");
-Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower2passcount");
+Adafruit_MQTT_Publish battPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower4battery");
+Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower4passcount");
 
 //functions
 void MQTT_connect();
@@ -77,6 +78,7 @@ void setup() {
     for(int i=0; i<SENSOR_COUNT; i++){
         pinMode(PRESSURE_PINS[i], INPUT);
         Serial.printf("Last Avg #%i: %i\n",i , pressureBaselines[i]);
+        gripThreshold[i] = int((4096-pressureBaselines[i])/2);      //set to halfway between baseline and max
     }
     Serial.printf("\n\n");
 }
@@ -91,7 +93,7 @@ void loop() {
 
     areAllPressed = true;
     for(int j=0; j<SENSOR_COUNT; j++){
-        if(pressureIn[j] - pressureBaselines[j] > gripStrength){
+        if(pressureIn[j] - pressureBaselines[j] > gripThreshold[j]){    //was gripStrength
             isPadPressed[j] = true;
         } else{
             isPadPressed[j] = false;
@@ -131,6 +133,14 @@ void loop() {
         }
         lastPublishTime = millis();
     }
+
+    if(millis()-lastSensorPrintTime >1000){
+        for (int i=0; i<4; i++){
+            Serial.printf("Sensor %i Value: %i:%i\n", i, pressureIn[i], gripThreshold[i]);
+        }
+        lastSensorPrintTime = millis();
+        Serial.printf("\n");
+    }
     pixel.show();
 }
 
@@ -148,8 +158,8 @@ void ledStripStartup(){
 
     //Quick test of all LEDs to make sure the strip works. 
     for (int i=0; i < PIXEL_COUNT; i++){
-        pixel.clear();
-        pixel.setPixelColor(i, 0xFFFFFF);
+        // pixel.clear();
+        pixel.setPixelColor(i, 0xFF0000);
         pixel.show();
         delay(20);
     }

@@ -4,6 +4,5 @@
     "files.associations": {
         "*.ino": "cpp"
     },
-    "particle.targetDevice": "SciKiFlower_2",
-    "cmake.configureOnOpen": false
+    "particle.targetDevice": "SciKiFlower_Base"
 }

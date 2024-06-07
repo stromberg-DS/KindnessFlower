@@ -8,6 +8,7 @@
 */
 
 #include "Particle.h"
+#include "neopixel.h"
 
 ////////KEEEP AUTOMATIC///////////
 SYSTEM_MODE(AUTOMATIC);
@@ -16,6 +17,7 @@ SYSTEM_THREAD(ENABLED);
 
 const int SENSOR_COUNT = 4;
 const int SAMPLE_COUNT =100;
+const int PIXEL_COUNT = 112;
 //Below MUST match the order in the final code
 const int PRESSURE_PINS[SENSOR_COUNT] = {A5, A0, A2, A1}; 
 
@@ -36,9 +38,15 @@ int get2DArrayAvg(int array[SENSOR_COUNT][SAMPLE_COUNT], int currentPin);
 int lastMillis = 0;
 bool isLEDOn = true;
 
+Adafruit_NeoPixel pixel(PIXEL_COUNT, SPI1, WS2812);
 
 void setup() {
   Serial.begin(9600);
+  pixel.begin();
+  pixel.setBrightness(50);
+  pixel.clear();
+  pixel.show();
+
   delay(5000);
   pinMode(D7, OUTPUT);
   digitalWrite(D7, LOW);
@@ -76,6 +84,16 @@ void loop() {
       Particle.publish(String(pubText[j]), String(avgBaselines[j]));
       delay(1000);
     }
+    for(int k=0; k<5; k++){
+      pixel.setBrightness(5);
+      pixel.show();
+      delay(250);
+      pixel.setBrightness(50);
+      pixel.show();
+      delay(250);
+    }
+    pixel.clear();
+    pixel.show();
   }else{
     digitalWrite(D7, LOW);
   }
@@ -91,16 +109,21 @@ void loop() {
 
 //Collect a bunch of samples from analog pins to be averaged later
 void getSensorSamples(){
+  int lastPixelToLight = 0;
   for(int i=0; i<SAMPLE_COUNT; i++){      
-      Serial.printf("Sample #%i\n", i);
-      for(int j=0; j<SENSOR_COUNT; j++){    
-        pressureSamples[j][i] = analogRead(PRESSURE_PINS[j]);
-        Serial.printf("   #%i: %i\n", j, pressureSamples[j][i]);
-      }
-      delay(100);
-      Serial.printf("\n");
-      
-    } 
+    lastPixelToLight = map(i, 0, SAMPLE_COUNT, 0, PIXEL_COUNT);
+    pixel.setPixelColor(lastPixelToLight, 0x00FFFF);
+    pixel.show();
+    Serial.printf("Sample #%i\n", i);
+    for(int j=0; j<SENSOR_COUNT; j++){    
+      pressureSamples[j][i] = analogRead(PRESSURE_PINS[j]);
+      Serial.printf("   #%i: %i\n", j, pressureSamples[j][i]);
+    }
+    
+    delay(100);
+    Serial.printf("\n");
+    
+  } 
     
 }
 
