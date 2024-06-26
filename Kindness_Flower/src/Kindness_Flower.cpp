@@ -120,16 +120,19 @@ void loop() {
     
     if(isFirstPass && areAllPressed && (millis()-lastPassTime > 30000)){
         passCount++;
+        if(mqtt.Update()){                  //included update for more responsive screen
+            passPub.publish(passCount);
+        }
         lastPassTime = millis();
         isFirstPass = false;
         Serial.printf("Pass Count: %i\n", passCount);
         Particle.publish("Pass Count", String(passCount));
     }
 
-    if(millis() - lastPublishTime > 30000){
+    if(millis() - lastPublishTime > 300000){    //send data every 5 minutes
         if(mqtt.Update()){
             battPub.publish(batVoltage);
-            passPub.publish(passCount);
+            // passPub.publish(passCount);
         }
         lastPublishTime = millis();
     }
