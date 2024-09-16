@@ -56,8 +56,18 @@ unsigned int lastSensorPrintTime = 0;
 Adafruit_NeoPixel pixel(PIXEL_COUNT, SPI1, WS2812);
 TCPClient TheClient;
 Adafruit_MQTT_SPARK mqtt(&TheClient, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
-Adafruit_MQTT_Publish battPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower4battery");
-Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower4passcount");
+// Adafruit_MQTT_Publish battPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower3battery");
+
+
+//////UNCOMMENT THE FLOWER NUMBER BELOW THAT YOU WANT TO FLASH/////
+//
+// Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower1passcount");
+// Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower2passcount");
+// Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower3passcount");
+// Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower4passcount");
+Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower5passcount");
+// Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower6passcount");
+
 
 //functions
 void MQTT_connect();
@@ -129,13 +139,15 @@ void loop() {
         Particle.publish("Pass Count", String(passCount));
     }
 
-    if(millis() - lastPublishTime > 300000){    //send data every 5 minutes
-        if(mqtt.Update()){
-            battPub.publish(batVoltage);
-            // passPub.publish(passCount);
-        }
-        lastPublishTime = millis();
-    }
+    //Send data to Adafruit every 5 min
+    //
+    // if(millis() - lastPublishTime > 300000){    //send data every 5 minutes
+    //     if(mqtt.Update()){
+    //         battPub.publish(batVoltage);
+    //         // passPub.publish(passCount);
+    //     }
+    //     lastPublishTime = millis();
+    // }
 
     if(millis()-lastSensorPrintTime >1000){
         for (int i=0; i<4; i++){

@@ -3,7 +3,7 @@
  * Author: Daniel Stromberg
  * Date: 5/8/24
  * 
- * Get the input from all 4 (or 6?) FSR sensors for a few seconds
+ * Get the input from all 4 FSR sensors for a few seconds
  *    then find the average and store it in EEPROM
 */
 
