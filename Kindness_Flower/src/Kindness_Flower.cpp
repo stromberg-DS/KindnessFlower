@@ -52,6 +52,7 @@ int batPin = A6;
 unsigned int lastPublishTime = 0;
 unsigned int lastPassTime = 0;
 unsigned int lastSensorPrintTime = 0;
+unsigned int lastIdleUpdate = 0;
 
 Adafruit_NeoPixel pixel(PIXEL_COUNT, SPI1, WS2812);
 TCPClient TheClient;
@@ -133,10 +134,21 @@ void loop() {
         if(mqtt.Update()){                  //included update for more responsive screen
             passPub.publish(passCount);
         }
-        lastPassTime = millis();
+        lastPassTime = millis();        
+        lastIdleUpdate = millis();      //reset idle update timer
         isFirstPass = false;
         Serial.printf("Pass Count: %i\n", passCount);
         Particle.publish("Pass Count", String(passCount));
+    }
+
+    //Update the passCount every 5 minutes if noone has touched it.
+    //  This allows the FlowerBase to be accurated even if it has been
+    //  reset.
+    if((millis() - lastIdleUpdate)>300000){ 
+        if(mqtt.Update()){
+            passPub.publish(passCount);
+        }
+        lastIdleUpdate = millis();
     }
 
     //Send data to Adafruit every 5 min
