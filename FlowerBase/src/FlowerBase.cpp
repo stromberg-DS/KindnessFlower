@@ -18,18 +18,20 @@ SYSTEM_THREAD(ENABLED);
 //constants
 const int OLED_RESET = -1;
 const int OLED_ADDRESS = 0x3C;
+const int ONBOARD_LED_PIN = D7;
 
 
 //Variables
-int flower1Count;
-int flower2Count;
-int flower3Count;
-int flower4Count;
-int flower5Count;
-int flower6Count;
+int flower1Count = 0;
+int flower2Count = 0;
+int flower3Count = 0;
+int flower4Count = 0;
+int flower5Count = 0;
+int flower6Count = 0;
 int totalPassCount = 0;
 int lastPubTime = 0;
 int lastPrintTime = 0;
+bool isLEDon = false;
 
 void MQTT_connect();
 bool MQTT_ping();
@@ -62,6 +64,8 @@ void setup() {
     mqtt.subscribe(&flower6Sub);
     Time.zone(-7);
     Particle.syncTime();
+
+    pinMode(ONBOARD_LED_PIN, OUTPUT);
 
     // display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDRESS);
     // display.clearDisplay();
@@ -98,13 +102,13 @@ void loop() {
             // updateDisplay(totalPassCount);
         }else if(subscription == &flower4Sub){
             flower4Count = strtol((char *)flower4Sub.lastread, NULL, 10);
-            Serial.printf("Incoming Flower2 Count: %i\n", flower4Count);
+            Serial.printf("Incoming Flower4 Count: %i\n", flower4Count);
             totalPassCount = flower1Count + flower2Count + flower3Count + flower4Count + flower5Count + flower6Count;
             adaPublish();
             // updateDisplay(totalPassCount);
         }else if(subscription == &flower5Sub){
-            flower5Count = strtol((char *)flower1Sub.lastread, NULL, 10);
-            Serial.printf("Incoming Flower1 Count: %i\n", flower1Count);
+            flower5Count = strtol((char *)flower5Sub.lastread, NULL, 10);
+            Serial.printf("Incoming Flower5 Count: %i\n", flower5Count);
             totalPassCount = flower1Count + flower2Count + flower3Count + flower4Count + flower5Count + flower6Count;
             adaPublish();
             // updateDisplay(totalPassCount);
@@ -118,10 +122,14 @@ void loop() {
     }
 
     if(millis() - lastPrintTime > 1000){
-        Serial.printf("Total Passes: %i\n", totalPassCount);
+        Serial.printf("Flower1: %i\nFlower2: %i\nFlower3: %i\nFlower4: %i\nFlower5: %i\nFlower6: %i\n\n", flower1Count, flower2Count, flower3Count, flower4Count, flower5Count, flower6Count);
+        Serial.printf("Total Passes: %i\n\n", totalPassCount);
         lastPrintTime=millis();
+        isLEDon = !isLEDon;
+        digitalWrite(ONBOARD_LED_PIN, isLEDon);
     }
 
+    //
     if(millis() - lastPubTime>20000){
         if(mqtt.Update()){
             totalPassPub.publish(totalPassCount);
