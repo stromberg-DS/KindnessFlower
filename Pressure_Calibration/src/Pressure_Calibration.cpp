@@ -67,10 +67,10 @@ void loop() {
     getSensorSamples();
     Serial.printf("\n\n");
 
-    avgBaselines[0] = get2DArrayAvg(pressureSamples, 0);
+    // avgBaselines[0] = get2DArrayAvg(pressureSamples, 0);
 
     Serial.printf("Averages: \n");
-    for (int i; i<SENSOR_COUNT; i++){
+    for (int i=0; i<SENSOR_COUNT; i++){
       avgBaselines[i] = get2DArrayAvg(pressureSamples, i);
       Serial.printf("    #%i - %i\n", i, avgBaselines[i]);
     }
