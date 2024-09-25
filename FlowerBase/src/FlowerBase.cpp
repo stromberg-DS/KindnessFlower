@@ -20,6 +20,8 @@ SYSTEM_THREAD(ENABLED);
 const int OLED_RESET = -1;
 const int OLED_ADDRESS = 0x3C;
 const int ONBOARD_LED_PIN = D7;
+const int SCREEN_WIDTH = 128;
+const int SCREEN_HEIGHT = 64;
 
 
 
@@ -57,6 +59,7 @@ Adafruit_SSD1306 display(OLED_RESET);
 String DateTime, TimeOnly, Day, MonthDate, Year;
 
 void drawFlower(int xPos, int yPos);
+void rndFlowerDrawings(bool showText);
 
 void setup() {
     Serial.begin(9600);
@@ -86,6 +89,8 @@ void setup() {
     display.setCursor(0,0);
     display.printf("Waiting 4 presses...");
     drawFlower(64, 40);
+    delay(2000);
+    rndFlowerDrawings(true);
 }
 
 void loop() {
@@ -99,36 +104,42 @@ void loop() {
             Serial.printf("Incoming Flower1 Count: %i\n", flower1Count);
             totalPassCount = flower1Count + flower2Count + flower3Count + flower4Count + flower5Count + flower6Count;
             adaPublish();
+            rndFlowerDrawings(true);
             updateDisplay(totalPassCount);
         }else if(subscription == &flower2Sub){
             flower2Count = strtol((char *)flower2Sub.lastread, NULL, 10);
             Serial.printf("Incoming Flower2 Count: %i\n", flower2Count);
             totalPassCount = flower1Count + flower2Count + flower3Count + flower4Count + flower5Count + flower6Count;
             adaPublish();
+            rndFlowerDrawings(true);
             updateDisplay(totalPassCount);
         }else if(subscription == &flower3Sub){
             flower3Count = strtol((char *)flower3Sub.lastread, NULL, 10);
             Serial.printf("Incoming Flower3 Count: %i\n", flower3Count);
             totalPassCount = flower1Count + flower2Count + flower3Count + flower4Count + flower5Count + flower6Count;
             adaPublish();
+            rndFlowerDrawings(true);
             updateDisplay(totalPassCount);
         }else if(subscription == &flower4Sub){
             flower4Count = strtol((char *)flower4Sub.lastread, NULL, 10);
             Serial.printf("Incoming Flower4 Count: %i\n", flower4Count);
             totalPassCount = flower1Count + flower2Count + flower3Count + flower4Count + flower5Count + flower6Count;
             adaPublish();
+            rndFlowerDrawings(true);
             updateDisplay(totalPassCount);
         }else if(subscription == &flower5Sub){
             flower5Count = strtol((char *)flower5Sub.lastread, NULL, 10);
             Serial.printf("Incoming Flower5 Count: %i\n", flower5Count);
             totalPassCount = flower1Count + flower2Count + flower3Count + flower4Count + flower5Count + flower6Count;
             adaPublish();
+            rndFlowerDrawings(true);
             updateDisplay(totalPassCount);
         }else if(subscription == &flower6Sub){
             flower6Count = strtol((char *)flower6Sub.lastread, NULL, 10);
             Serial.printf("Incoming Flower6 Count: %i\n", flower6Count);
             totalPassCount = flower1Count + flower2Count + flower3Count + flower4Count + flower5Count + flower6Count;
             adaPublish();
+            rndFlowerDrawings(true);
             updateDisplay(totalPassCount);
         }
     }
@@ -142,13 +153,13 @@ void loop() {
     }
 
     //
-    if(millis() - lastPubTime>20000){
-        if(mqtt.Update()){
-            totalPassPub.publish(totalPassCount);
-            updateDisplay(totalPassCount);
-            lastPubTime = millis();
-        }
-    }
+    // if(millis() - lastPubTime>20000){
+    //     if(mqtt.Update()){
+    //         totalPassPub.publish(totalPassCount);
+    //         updateDisplay(totalPassCount);
+    //         lastPubTime = millis();
+    //     }
+    // }
 }
 
 //Publish to Adafruit.io (publish infrequently)
@@ -209,51 +220,69 @@ bool MQTT_ping() {
     return pingStatus;
 }
 
+void rndFlowerDrawings(bool showText){
+    for(int i=0; i<20; i++){
+        drawFlower(random(SCREEN_WIDTH), random(SCREEN_HEIGHT));
+        if(showText){
+            display.fillRect(10, 15, 40, 20, BLACK);
+            display.fillRect(10, 26, 80, 20, BLACK);
+            display.setTextSize(2);
+            display.setCursor(0,0);
+            display.printf("\n NEW\n FLOWER");
+        }
+        display.display();
+        delay(100);
+
+    }
+
+
+}
+
+
 void drawFlower(int xPos, int yPos){
-    int r = 12;
-    int petalOffset = 15;
-    int eightPos = (int)(petalOffset*ROOT2_2);
-    int petalR = 6;
+    int r = 10;
+    int petalOffset = 13;
+    int eighthPos = (int)(petalOffset*ROOT2_2);
+    int petalR =5;
 
     //Draw Petals
     display.fillCircle(xPos+petalOffset, yPos, petalR-1, BLACK);
     display.drawCircle(xPos+petalOffset, yPos, petalR, WHITE);
 
-    display.fillCircle(xPos+eightPos, yPos+eightPos, petalR-1, BLACK);
-    display.drawCircle(xPos+eightPos, yPos+eightPos, petalR, WHITE);
+    display.fillCircle(xPos-petalOffset, yPos, petalR-1, BLACK);
+    display.drawCircle(xPos-petalOffset, yPos, petalR, WHITE);
 
     display.fillCircle(xPos, yPos+petalOffset, petalR-1, BLACK);
     display.drawCircle(xPos, yPos+petalOffset, petalR, WHITE);
 
-    display.fillCircle(xPos-eightPos, yPos+eightPos, petalR-1, BLACK);
-    display.drawCircle(xPos-eightPos, yPos+eightPos, petalR, WHITE);
-
-    display.fillCircle(xPos-petalOffset, yPos, petalR-1, BLACK);
-    display.drawCircle(xPos-petalOffset, yPos, petalR, WHITE);
-
-    display.fillCircle(xPos-eightPos, yPos-eightPos, petalR-1, BLACK);
-    display.drawCircle(xPos-eightPos, yPos-eightPos, petalR, WHITE);
-
     display.fillCircle(xPos, yPos-petalOffset, petalR-1, BLACK);
     display.drawCircle(xPos, yPos-petalOffset, petalR, WHITE);
 
-    display.fillCircle(xPos+eightPos, yPos-eightPos, petalR-1, BLACK);
-    display.drawCircle(xPos+eightPos, yPos-eightPos, petalR, WHITE);
+    display.fillCircle(xPos+eighthPos, yPos+eighthPos, petalR-1, BLACK);
+    display.drawCircle(xPos+eighthPos, yPos+eighthPos, petalR, WHITE);
+
+    display.fillCircle(xPos-eighthPos, yPos-eighthPos, petalR-1, BLACK);
+    display.drawCircle(xPos-eighthPos, yPos-eighthPos, petalR, WHITE);
+
+    display.fillCircle(xPos-eighthPos, yPos+eighthPos, petalR-1, BLACK);
+    display.drawCircle(xPos-eighthPos, yPos+eighthPos, petalR, WHITE);
+
+    display.fillCircle(xPos+eighthPos, yPos-eighthPos, petalR-1, BLACK);
+    display.drawCircle(xPos+eighthPos, yPos-eighthPos, petalR, WHITE);
 
 
-    //erase overlaps
+    //erase overlaps - comment out if petals are big
     display.fillCircle(xPos+petalOffset, yPos, petalR-1, BLACK);
-    display.fillCircle(xPos+eightPos, yPos+eightPos, petalR-1, BLACK);
+    display.fillCircle(xPos+eighthPos, yPos+eighthPos, petalR-1, BLACK);
     display.fillCircle(xPos, yPos+petalOffset, petalR-1, BLACK);
-    display.fillCircle(xPos-eightPos, yPos+eightPos, petalR-1, BLACK);
+    display.fillCircle(xPos-eighthPos, yPos+eighthPos, petalR-1, BLACK);
     display.fillCircle(xPos-petalOffset, yPos, petalR-1, BLACK);
-    display.fillCircle(xPos-eightPos, yPos-eightPos, petalR-1, BLACK);
+    display.fillCircle(xPos-eighthPos, yPos-eighthPos, petalR-1, BLACK);
     display.fillCircle(xPos, yPos-petalOffset, petalR-1, BLACK);
-    display.fillCircle(xPos+eightPos, yPos-eightPos, petalR-1, BLACK);
+    display.fillCircle(xPos+eighthPos, yPos-eighthPos, petalR-1, BLACK);
 
 
     //Draw center of flower
     display.fillCircle(xPos, yPos, r, BLACK);
     display.drawCircle(xPos, yPos, r, WHITE);
-    display.display();
 }
