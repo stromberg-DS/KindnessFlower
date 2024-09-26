@@ -33,7 +33,6 @@ bool isSampling = true;
 String pubText[4] = {"Baseline #1", "Baseline #2", "Baseline #3", "Baseline #4"};
 
 void getSensorSamples();
-int getArrayAverage(int array[], int size);
 int get2DArrayAvg(int array[SENSOR_COUNT][SAMPLE_COUNT], int currentPin);
 int lastMillis = 0;
 bool isLEDOn = true;

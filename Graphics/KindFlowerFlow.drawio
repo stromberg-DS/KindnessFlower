@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-09-24T20:27:27.671Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36" etag="-YnvgIYwfJI2hc2a9BjT" version="24.2.7" type="device" pages="3">
+<mxfile host="app.diagrams.net" modified="2024-09-25T21:25:56.927Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36" etag="NtiHX2pg6rnHn-mYO30l" version="24.2.7" type="device" pages="3">
   <diagram name="FlowerLogic" id="JjPMWJ2Ls_Jt1AWlveAf">
     <mxGraphModel dx="1029" dy="1047" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -195,7 +195,7 @@
     </mxGraphModel>
   </diagram>
   <diagram name="BaseLogic" id="VUl_Lp_xMmhS53PX2SRP">
-    <mxGraphModel dx="772" dy="785" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="714" dy="785" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="pckIV913CompsdE5iTZD-0" />
         <mxCell id="pckIV913CompsdE5iTZD-1" parent="pckIV913CompsdE5iTZD-0" />
@@ -207,6 +207,9 @@
         </mxCell>
         <mxCell id="pckIV913CompsdE5iTZD-5" value="Base&amp;nbsp;&lt;div&gt;Startup&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;" vertex="1" parent="pckIV913CompsdE5iTZD-1">
           <mxGeometry x="122.5" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_48hNNk1uCNzCKEGz68F-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="pckIV913CompsdE5iTZD-1" source="pckIV913CompsdE5iTZD-7" target="_48hNNk1uCNzCKEGz68F-4">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="pckIV913CompsdE5iTZD-7" value="Subscribe to all flower&lt;div&gt;feeds on Adafruit&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=14;" vertex="1" parent="pckIV913CompsdE5iTZD-1">
           <mxGeometry x="84" y="144" width="197" height="70" as="geometry" />
@@ -229,20 +232,133 @@
         <mxCell id="_48hNNk1uCNzCKEGz68F-9" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Yes&lt;/font&gt;" style="edgeLabel;resizable=0;html=1;;align=center;verticalAlign=middle;" connectable="0" vertex="1" parent="_48hNNk1uCNzCKEGz68F-8">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
+        <mxCell id="_48hNNk1uCNzCKEGz68F-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="pckIV913CompsdE5iTZD-1" source="_48hNNk1uCNzCKEGz68F-10" target="_48hNNk1uCNzCKEGz68F-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="_48hNNk1uCNzCKEGz68F-10" value="Update the flower count for the appropriate flower." style="whiteSpace=wrap;html=1;fontSize=14;rounded=0;" vertex="1" parent="pckIV913CompsdE5iTZD-1">
           <mxGeometry x="95" y="520" width="175" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="5R5mPqNfnOuBJ3O3_Ugw-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="pckIV913CompsdE5iTZD-1" source="_48hNNk1uCNzCKEGz68F-14" target="5R5mPqNfnOuBJ3O3_Ugw-4">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="_48hNNk1uCNzCKEGz68F-14" value="Add all of the flower counts together." style="whiteSpace=wrap;html=1;fontSize=14;rounded=0;" vertex="1" parent="pckIV913CompsdE5iTZD-1">
           <mxGeometry x="105" y="610" width="155" height="60" as="geometry" />
         </mxCell>
+        <mxCell id="5R5mPqNfnOuBJ3O3_Ugw-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="pckIV913CompsdE5iTZD-1" source="5R5mPqNfnOuBJ3O3_Ugw-4" target="5R5mPqNfnOuBJ3O3_Ugw-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5R5mPqNfnOuBJ3O3_Ugw-4" value="Publish total pass&lt;div&gt;count to Adafruit&lt;/div&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontSize=14;rounded=0;" vertex="1" parent="pckIV913CompsdE5iTZD-1">
+          <mxGeometry x="95" y="700" width="175" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="5R5mPqNfnOuBJ3O3_Ugw-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="pckIV913CompsdE5iTZD-1" source="5R5mPqNfnOuBJ3O3_Ugw-6" target="_48hNNk1uCNzCKEGz68F-4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="183" y="900" />
+              <mxPoint x="60" y="900" />
+              <mxPoint x="60" y="309" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5R5mPqNfnOuBJ3O3_Ugw-6" value="Update OLED display&lt;div&gt;on base case.&lt;/div&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontSize=14;rounded=0;" vertex="1" parent="pckIV913CompsdE5iTZD-1">
+          <mxGeometry x="95" y="799" width="175" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="5R5mPqNfnOuBJ3O3_Ugw-11" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="pckIV913CompsdE5iTZD-1" source="_48hNNk1uCNzCKEGz68F-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="193" y="380" as="sourcePoint" />
+            <mxPoint x="183" y="900" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="300" y="309" />
+              <mxPoint x="300" y="900" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5R5mPqNfnOuBJ3O3_Ugw-12" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;No&lt;/font&gt;" style="edgeLabel;resizable=0;html=1;;align=center;verticalAlign=middle;" connectable="0" vertex="1" parent="5R5mPqNfnOuBJ3O3_Ugw-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
-  <diagram id="Ccswp3nXS_iAAnSXosIh" name="CalibrationLogic">
-    <mxGraphModel dx="772" dy="785" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+  <diagram name="FlowerCalibrationLogic" id="0utpd6mP-NkNvD9RJBAc">
+    <mxGraphModel dx="714" dy="785" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-0" />
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-1" parent="WrarT8OSvZZv2YtLvh5k-0" />
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-2" value="&lt;span style=&quot;font-size: 45px;&quot;&gt;Flower Base Logic&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=32;fontStyle=1" vertex="1" parent="WrarT8OSvZZv2YtLvh5k-1">
+          <mxGeometry x="350" y="88" width="420" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WrarT8OSvZZv2YtLvh5k-1" source="WrarT8OSvZZv2YtLvh5k-4" target="WrarT8OSvZZv2YtLvh5k-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-4" value="Base&amp;nbsp;&lt;div&gt;Startup&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;" vertex="1" parent="WrarT8OSvZZv2YtLvh5k-1">
+          <mxGeometry x="122.5" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WrarT8OSvZZv2YtLvh5k-1" source="WrarT8OSvZZv2YtLvh5k-6" target="WrarT8OSvZZv2YtLvh5k-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-6" value="Subscribe to all flower&lt;div&gt;feeds on Adafruit&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=14;" vertex="1" parent="WrarT8OSvZZv2YtLvh5k-1">
+          <mxGeometry x="84" y="144" width="197" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-7" value="Is there new subcription info coming in?" style="rhombus;whiteSpace=wrap;html=1;fontSize=14;rounded=0;" vertex="1" parent="WrarT8OSvZZv2YtLvh5k-1">
+          <mxGeometry x="121.5" y="248" width="122" height="122" as="geometry" />
+        </mxCell>
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WrarT8OSvZZv2YtLvh5k-1" source="WrarT8OSvZZv2YtLvh5k-9" target="WrarT8OSvZZv2YtLvh5k-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-9" value="Figure out which flower it is coming from." style="whiteSpace=wrap;html=1;fontSize=14;rounded=0;" vertex="1" parent="WrarT8OSvZZv2YtLvh5k-1">
+          <mxGeometry x="105" y="424" width="155" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-10" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WrarT8OSvZZv2YtLvh5k-1" source="WrarT8OSvZZv2YtLvh5k-7" target="WrarT8OSvZZv2YtLvh5k-9">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330" y="380" as="sourcePoint" />
+            <mxPoint x="430" y="380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-11" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Yes&lt;/font&gt;" style="edgeLabel;resizable=0;html=1;;align=center;verticalAlign=middle;" connectable="0" vertex="1" parent="WrarT8OSvZZv2YtLvh5k-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WrarT8OSvZZv2YtLvh5k-1" source="WrarT8OSvZZv2YtLvh5k-13" target="WrarT8OSvZZv2YtLvh5k-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-13" value="Update the flower count for the appropriate flower." style="whiteSpace=wrap;html=1;fontSize=14;rounded=0;" vertex="1" parent="WrarT8OSvZZv2YtLvh5k-1">
+          <mxGeometry x="95" y="520" width="175" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WrarT8OSvZZv2YtLvh5k-1" source="WrarT8OSvZZv2YtLvh5k-15" target="WrarT8OSvZZv2YtLvh5k-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-15" value="Add all of the flower counts together." style="whiteSpace=wrap;html=1;fontSize=14;rounded=0;" vertex="1" parent="WrarT8OSvZZv2YtLvh5k-1">
+          <mxGeometry x="105" y="610" width="155" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WrarT8OSvZZv2YtLvh5k-1" source="WrarT8OSvZZv2YtLvh5k-17" target="WrarT8OSvZZv2YtLvh5k-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-17" value="Publish total pass&lt;div&gt;count to Adafruit&lt;/div&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontSize=14;rounded=0;" vertex="1" parent="WrarT8OSvZZv2YtLvh5k-1">
+          <mxGeometry x="95" y="700" width="175" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WrarT8OSvZZv2YtLvh5k-1" source="WrarT8OSvZZv2YtLvh5k-19" target="WrarT8OSvZZv2YtLvh5k-7">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="183" y="900" />
+              <mxPoint x="60" y="900" />
+              <mxPoint x="60" y="309" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-19" value="Update OLED display&lt;div&gt;on base case.&lt;/div&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontSize=14;rounded=0;" vertex="1" parent="WrarT8OSvZZv2YtLvh5k-1">
+          <mxGeometry x="95" y="799" width="175" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-20" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="WrarT8OSvZZv2YtLvh5k-1" source="WrarT8OSvZZv2YtLvh5k-7">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="193" y="380" as="sourcePoint" />
+            <mxPoint x="183" y="900" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="300" y="309" />
+              <mxPoint x="300" y="900" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WrarT8OSvZZv2YtLvh5k-21" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;No&lt;/font&gt;" style="edgeLabel;resizable=0;html=1;;align=center;verticalAlign=middle;" connectable="0" vertex="1" parent="WrarT8OSvZZv2YtLvh5k-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
