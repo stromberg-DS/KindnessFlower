@@ -73,10 +73,10 @@ Adafruit_MQTT_SPARK mqtt(&TheClient, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, A
 //
 // Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower1passcount");
 // Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower2passcount");
-Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower3passcount");
+// Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower3passcount");
 // Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower4passcount");
 // Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower5passcount");
-// Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower6passcount");
+Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower6passcount");
 
 
 //functions
@@ -103,6 +103,7 @@ void setup() {
     ledStripStartup();
 
     Particle.variable("BatteryVoltage", batVoltage);
+    Particle.variable("Pass Count", passCount);
 
     Serial.printf("#### Incoming Average Baselines ####\n");
     for(int i=0; i<SENSOR_COUNT; i++){
