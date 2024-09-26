@@ -1,6 +1,7 @@
 credentials.h
 credential.h
 nul
+settings.json
 
 # Key files
 *.der
