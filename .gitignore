@@ -1,5 +1,6 @@
 credentials.h
 credential.h
+settings.json
 
 # to remove git null error
 nul
