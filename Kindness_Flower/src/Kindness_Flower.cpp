@@ -35,7 +35,11 @@ int gripThreshold[SENSOR_COUNT];    //NewThreshold values: halfway between basel
 
 //EEPROM Setup 
 int len = EEPROM.length();
-const int BASELINE_ADDRESS = 0x0001;
+const int BASELINE_ADDRESS = 0x0001;    //length of 4x ints is 16 bytes (4 bytes per)
+//start COUNT_ADDRESS at 0x0014 (or 21 in decimal) to put some space between
+//      it and BASELINE_ADDRESS which ends at 0x0011 (or 17 in decimal)
+const int COUNT_ADDRESS = 0x0015;
+
 
 int brightness = 255;
 int pixelDelay = 50;
@@ -45,7 +49,7 @@ int pressureIn[SENSOR_COUNT];
 bool areAllPressed = false;
 bool isPadPressed[SENSOR_COUNT];
 
-int passCount = 0;
+int passCount;
 bool isFirstPass = true;
 double batVoltage;
 int batPin = A6;
@@ -53,6 +57,11 @@ unsigned int lastPublishTime = 0;
 unsigned int lastPassTime = 0;
 unsigned int lastSensorPrintTime = 0;
 unsigned int lastIdleUpdate = 0;
+
+String DateTime, TimeOnly, HourOnly;
+bool doesCountNeedReset = false;
+int currentHour;
+int currentMinute;
 
 Adafruit_NeoPixel pixel(PIXEL_COUNT, SPI1, WS2812);
 TCPClient TheClient;
@@ -64,9 +73,9 @@ Adafruit_MQTT_SPARK mqtt(&TheClient, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, A
 //
 // Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower1passcount");
 // Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower2passcount");
-// Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower3passcount");
+Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower3passcount");
 // Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower4passcount");
-Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower5passcount");
+// Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower5passcount");
 // Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower6passcount");
 
 
@@ -79,7 +88,17 @@ uint32_t wheel(byte wheelPos);
 void rainbow(uint8_t wait);
 
 void setup() {
+    Serial.begin(9600);
+    waitFor(Serial.isConnected, 10000);
     EEPROM.get(BASELINE_ADDRESS, pressureBaselines);
+    EEPROM.get(COUNT_ADDRESS, passCount);
+    if(passCount<0) passCount=0;
+
+    Time.zone(-7);
+    Particle.syncTime();
+    
+    int pressVarSize = sizeof(pressureBaselines);
+    Serial.printf("Size of pressureBaselines: %i\n", pressVarSize);
     pinMode(batPin, INPUT);
     ledStripStartup();
 
@@ -98,10 +117,26 @@ void loop() {
     MQTT_connect();
     MQTT_ping();
     batVoltage = analogRead(batPin)/819.2;
+
+    DateTime = Time.timeStr();
+    TimeOnly = DateTime.substring(11,19);
+    HourOnly = DateTime.substring(11, 13);
+    currentHour =  atoi(HourOnly);
+
+    if(doesCountNeedReset && currentHour<6){
+        passCount=0;
+        Particle.publish("Passcount reset to 0");
+        doesCountNeedReset = false;
+    }else if(currentHour>=23){
+        doesCountNeedReset = true;
+    }
+    
+
     for(int i=0; i<SENSOR_COUNT; i++){
         pressureIn[i] = analogRead(PRESSURE_PINS[i]);
     }
 
+    // Assume all are pressed until we find one that is not pressed
     areAllPressed = true;
     for(int j=0; j<SENSOR_COUNT; j++){
         if(pressureIn[j] - pressureBaselines[j] > gripThreshold[j]){    //was gripStrength
@@ -113,6 +148,7 @@ void loop() {
     }
 
     if(areAllPressed){
+        // Show Rainbow display
         if(millis() - pixelPrevious >= pixelDelay){
             pixelPrevious = millis();
             rainbow(1);
@@ -131,6 +167,7 @@ void loop() {
     
     if(isFirstPass && areAllPressed && (millis()-lastPassTime > 30000)){
         passCount++;
+        EEPROM.put(COUNT_ADDRESS, passCount);
         if(mqtt.Update()){                  //included update for more responsive screen
             passPub.publish(passCount);
         }
@@ -162,9 +199,13 @@ void loop() {
     // }
 
     if(millis()-lastSensorPrintTime >1000){
+        Serial.printf("passCount: %i\n", passCount);
         for (int i=0; i<4; i++){
-            Serial.printf("Sensor %i Value: %i:%i\n", i, pressureIn[i], gripThreshold[i]);
+            Serial.printf("Sensor %i Value: %04i:%04i\n", i, pressureIn[i], gripThreshold[i]);
         }
+        Serial.printf("\nDateTime: %s\n", DateTime.c_str());
+        Serial.printf("TimeOnly: %s\n", TimeOnly.c_str());
+        Serial.printf("Hour: %i\n", currentHour);
         lastSensorPrintTime = millis();
         Serial.printf("\n");
     }
