@@ -1,7 +1,9 @@
 # Kindness Flower
+###### Developed by Drew Hatzung and Daniel Stromberg
+
 
 ## General Info
-Kindness Flowers are a set of exhibits that encourage and track kind acts. They are large flowers made of acrylic tube, foam tubes, craft foam, and some electronics. They have 4 pressure sensors on them that activate LEDs inside the flower when they are pressed. When the flower is passed from one person to another (all 4 pressure pads are pressed) the entire flower stem lights up with a rainbow effect and adds to the total number of passes for the day.
+Kindness Flowers are a set of exhibits that encourage and track kind acts. They are large flowers made of acrylic tube, foam tubes, craft foam, and some electronics. They have 4 pressure sensors on them that activate LEDs inside the flower when they are pressed. When the flower is passed from one person to another (all 4 pressure pads are pressed) the entire flower stem lights up with a rainbow effect and adds to the total number of passes for the day. The total count is displayed at [Adafruit.io](https://io.adafruit.com/explora_exhibits/dashboards/kindnesskount)
 
 ## Parts of the exhibit
 
@@ -13,6 +15,7 @@ The Flower Base collects the passcounts of each flower from Adafruit.io. It adds
 
 ### Charging Stations
 The charging stations have a wireless charger under the "vase" that holds the flower. The flowers can charge while they sit in the vase. Some of the charging stations also have a display on them the shows the Adafruit.io dashboard with the total pass count reported by the flower base. The webpage is open on either a raspberry pi or a small stick pc.
+
 
 
 
