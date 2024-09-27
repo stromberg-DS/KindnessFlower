@@ -221,14 +221,14 @@ void ledFill(int color, int firstLED, int lastLED) {
 
 void ledStripStartup(){
     pixel.begin();
-    pixel.setBrightness(brightness);
+    pixel.setBrightness(brightness/2);
     pixel.clear();
     pixel.show();
 
     //Quick test of all LEDs to make sure the strip works. 
     for (int i=0; i < PIXEL_COUNT; i++){
         // pixel.clear();
-        pixel.setPixelColor(i, 0xFF0000);
+        pixel.setPixelColor(i, 0x00FF99);
         pixel.show();
         delay(20);
     }
@@ -237,6 +237,7 @@ void ledStripStartup(){
 
     pixel.clear();
     pixel.show();
+    pixel.setBrightness(brightness);
 }
 
 void rainbow(uint8_t wait){
