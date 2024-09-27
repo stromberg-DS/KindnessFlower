@@ -1,5 +1,6 @@
 # Kindness Flower
-###### Developed by Drew Hatzung and Daniel Stromberg
+###### Developed by Drew Hatzung and Daniel Stromberg for Explora "Science of Kindness" exhibition, 2024
+![Kindness Flower](https://github.com/stromberg-DS/KindnessFlower/blob/main/Graphics/KindFlower.JPEG)
 
 
 ## General Info
