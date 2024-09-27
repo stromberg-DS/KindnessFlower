@@ -57,6 +57,8 @@ Adafruit_MQTT_Publish totalPassPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "
 Adafruit_SSD1306 display(OLED_RESET);
 
 String DateTime, TimeOnly, Day, MonthDate, Year;
+int currentHour;
+bool doesCountNeedReset = false;
 
 void drawFlower(int xPos, int yPos);
 void rndFlowerDrawings(bool showText);
@@ -90,15 +92,32 @@ void setup() {
     display.printf("Waiting 4 presses...");
     drawFlower(64, 40);
     delay(2000);
-    rndFlowerDrawings(true);
+    rndFlowerDrawings(false);
 }
 
 void loop() {
     MQTT_connect();
     MQTT_ping();
 
+    //Reset all counts overnight
+    DateTime = Time.timeStr();
+    currentHour = atoi(DateTime.substring(11,13));
+    if(doesCountNeedReset && currentHour<6){
+        totalPassCount = 0;
+        flower1Count = 0;
+        flower2Count = 0;
+        flower3Count = 0;
+        flower4Count = 0;
+        flower5Count = 0;
+        flower6Count = 0;
+        Particle.publish("All passcounts set to 0");
+        doesCountNeedReset = false;
+    }else if(currentHour>=23){
+        doesCountNeedReset = true;
+    }
+
     Adafruit_MQTT_Subscribe *subscription;
-    while((subscription = mqtt.readSubscription(100))){    //at the moment, flowers publish every 30 sec.
+    while((subscription = mqtt.readSubscription(100))){    
         if(subscription == &flower1Sub){
             flower1Count = strtol((char *)flower1Sub.lastread, NULL, 10);
             Serial.printf("Incoming Flower1 Count: %i\n", flower1Count);
