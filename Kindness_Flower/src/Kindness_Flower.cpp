@@ -73,10 +73,10 @@ Adafruit_MQTT_SPARK mqtt(&TheClient, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, A
 //
 // Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower1passcount");
 // Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower2passcount");
-// Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower3passcount");
+Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower3passcount");
 // Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower4passcount");
 // Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower5passcount");
-Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower6passcount");
+// Adafruit_MQTT_Publish passPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/flower6passcount");
 
 
 //functions
@@ -86,6 +86,7 @@ void ledStripStartup();
 void ledFill(int color, int firstLED = 0, int lastLED = PIXEL_COUNT);
 uint32_t wheel(byte wheelPos);
 void rainbow(uint8_t wait);
+int resetCount(String command);     //particle function to be called from particle console
 
 void setup() {
     Serial.begin(9600);
@@ -104,6 +105,7 @@ void setup() {
 
     Particle.variable("BatteryVoltage", batVoltage);
     Particle.variable("Pass Count", passCount);
+    Particle.function("ResetCount", resetCount);
 
     Serial.printf("#### Incoming Average Baselines ####\n");
     for(int i=0; i<SENSOR_COUNT; i++){
@@ -308,4 +310,20 @@ bool MQTT_ping() {
         last = millis();
     }
     return pingStatus;
+}
+
+//This function can be called from the particle console.
+//  That way, we can reset the count to 0 from anywhere.
+int resetCount(String command){
+    if(command == "reset"){
+        passCount = 0;
+        EEPROM.put(COUNT_ADDRESS, passCount);
+        
+        if(mqtt.Update()){
+            passPub.publish(passCount);
+        }
+        return 1;
+    }else{
+        return -1;
+    }
 }
