@@ -128,6 +128,7 @@ void loop() {
         passCount=0;
         Particle.publish("Passcount reset to 0");
         doesCountNeedReset = false;
+        EEPROM.put(COUNT_ADDRESS, passCount);
     }else if(currentHour>=23){
         doesCountNeedReset = true;
     }
