@@ -95,6 +95,9 @@ void setup() {
     EEPROM.get(COUNT_ADDRESS, passCount);
     if(passCount<0) passCount=0;
 
+    Watchdog.init(WatchdogConfiguration().timeout(600s));   //Set watchdog timer to 5 min
+    Watchdog.start();                                       //Start watchdog timer
+
     Time.zone(-7);
     Particle.syncTime();
     
@@ -117,6 +120,7 @@ void setup() {
 }
 
 void loop() {
+    Watchdog.refresh();     //Watchdog timer checks in every loop.
     MQTT_connect();
     MQTT_ping();
     batVoltage = analogRead(batPin)/819.2;
